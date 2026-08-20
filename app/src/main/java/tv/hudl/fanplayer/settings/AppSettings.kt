@@ -7,5 +7,6 @@ data class AppSettings(
     val interruptVodWhenLive: Boolean = true,
     val returnHomeAfterEvent: Boolean = true,
     val launchOnBoot: Boolean = true,
-    val keepScreenAwake: Boolean = true
+    val keepScreenAwake: Boolean = true,
+    val extremeKioskMode: Boolean = false
 )

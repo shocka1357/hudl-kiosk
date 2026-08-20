@@ -48,11 +48,71 @@
             android:textColor="#FFFFFF" />
 
         <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/admin_interrupt_vod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Interrupt on-demand video when a live event begins"
+            android:textColor="#FFFFFF" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/admin_return_home"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Return to the broadcast menu after playback"
+            android:textColor="#FFFFFF" />
+
+        <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/admin_keep_awake"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Keep the screen awake"
             android:textColor="#FFFFFF" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/admin_extreme_kiosk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Extreme accessibility lockdown"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:id="@+id/admin_lockdown_status"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="#C8D1D8"
+            android:textSize="15sp" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/admin_accessibility_settings"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Accessibility settings" />
+
+            <Button
+                android:id="@+id/admin_lock_now"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Lock now" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="#19242C"
+            android:padding="18dp"
+            android:text="READ-ONLY MANAGEMENT&#10;Open http://&lt;device IP&gt;:8787 from a browser on the same local network."
+            android:textColor="#C8D1D8"
+            android:textSize="16sp" />
 
         <TextView
             android:layout_width="wrap_content"
