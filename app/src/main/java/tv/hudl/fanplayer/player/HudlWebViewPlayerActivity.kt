@@ -138,12 +138,6 @@ class HudlWebViewPlayerActivity : Activity() {
         setContentView(FrameLayout(this).apply {
             addView(webView, FrameLayout.LayoutParams(-1, -1))
             addView(statusView, FrameLayout.LayoutParams(-1, -2, Gravity.CENTER))
-            addView(Button(this@HudlWebViewPlayerActivity).apply {
-                text = "Back to Hudl Kiosk"
-                setOnClickListener { finish() }
-            }, FrameLayout.LayoutParams(-2, -2, Gravity.TOP or Gravity.END).apply {
-                setMargins(16, 16, 16, 16)
-            })
             addView(switchPanel, FrameLayout.LayoutParams(dp(680), -2, Gravity.CENTER))
         })
 
