@@ -2,11 +2,15 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.REORDER_TASKS" />
     <uses-feature android:name="android.software.leanback" android:required="false" />
     <uses-feature android:name="android.hardware.touchscreen" android:required="false" />
 
     <application
+        android:name=".HudlKioskApplication"
+        android:icon="@mipmap/ic_launcher"
         android:label="Hudl Kiosk"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.FanPlayer">
         <activity
             android:name=".MainActivity"
@@ -27,6 +31,10 @@
             android:name=".settings.AdminSettingsActivity"
             android:screenOrientation="landscape"
             android:exported="false" />
+        <activity
+            android:name=".settings.FirstRunSetupActivity"
+            android:screenOrientation="landscape"
+            android:exported="false" />
         <receiver
             android:name=".automation.BootReceiver"
             android:enabled="true"
@@ -35,5 +43,18 @@
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
             </intent-filter>
         </receiver>
+        <service
+            android:name=".kiosk.KioskAccessibilityService"
+            android:description="@string/kiosk_accessibility_description"
+            android:exported="true"
+            android:label="Hudl Kiosk lockdown"
+            android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">
+            <intent-filter>
+                <action android:name="android.accessibilityservice.AccessibilityService" />
+            </intent-filter>
+            <meta-data
+                android:name="android.accessibilityservice"
+                android:resource="@xml/kiosk_accessibility_service" />
+        </service>
     </application>
 </manifest>

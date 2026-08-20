@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
@@ -24,7 +25,9 @@ import tv.hudl.fanplayer.data.HudlPublicGraphQlService
 import tv.hudl.fanplayer.domain.HudlEvent
 import tv.hudl.fanplayer.domain.HudlEventStatus
 import tv.hudl.fanplayer.domain.OrganizationReference
+import tv.hudl.fanplayer.management.DeviceStatusRegistry
 import tv.hudl.fanplayer.settings.SettingsStore
+import java.util.UUID
 
 /** Public Hudl embed fallback with autoplay and live-event takeover while watching VOD. */
 class HudlWebViewPlayerActivity : Activity() {
@@ -35,12 +38,29 @@ class HudlWebViewPlayerActivity : Activity() {
 
     private val settingsStore by lazy { SettingsStore(this) }
     private val mainHandler = Handler(Looper.getMainLooper())
+    private val playbackSessionId = UUID.randomUUID().toString()
     private var currentEventId: String? = null
     private var currentEventTitle: String? = null
     private var currentIsLive = false
     private var suppressedLiveEventId: String? = null
     private var pendingLiveEvent: HudlEvent? = null
     private var countdownSeconds = SWITCH_COUNTDOWN_SECONDS
+    private var autoplayAttemptsRemaining = 0
+
+    private val autoplayAttempt = object : Runnable {
+        override fun run() {
+            if (autoplayAttemptsRemaining <= 0 || isFinishing || isDestroyed) return
+            autoplayAttemptsRemaining--
+            webView.evaluateJavascript(AUTOPLAY_SCRIPT) { result ->
+                if (result == "\"started\"") {
+                    autoplayAttemptsRemaining = 0
+                    DeviceStatusRegistry.playerStarted(playbackSessionId)
+                } else if (autoplayAttemptsRemaining > 0) {
+                    mainHandler.postDelayed(this, AUTOPLAY_RETRY_INTERVAL_MS)
+                }
+            }
+        }
+    }
 
     private val livePollingCoordinator by lazy {
         EventPollingCoordinator(HudlPublicGraphQlService()) { result ->
@@ -91,12 +111,14 @@ class HudlWebViewPlayerActivity : Activity() {
             settings.allowFileAccess = false
             webViewClient = object : WebViewClient() {
                 override fun onPageStarted(view: WebView, url: String, favicon: android.graphics.Bitmap?) {
+                    stopAutoplayAttempts()
                     statusView.visibility = View.VISIBLE
                     statusView.text = "Starting ${currentEventTitle ?: "Hudl broadcast"}…"
                 }
 
                 override fun onPageFinished(view: WebView, url: String) {
                     statusView.visibility = View.GONE
+                    startAutoplayAttempts()
                 }
 
                 @Suppress("DEPRECATION")
@@ -151,6 +173,12 @@ class HudlWebViewPlayerActivity : Activity() {
 
     override fun onStart() {
         super.onStart()
+        DeviceStatusRegistry.playerOpened(
+            playbackSessionId,
+            currentEventId,
+            currentEventTitle,
+            currentIsLive
+        )
         if (!currentIsLive && settingsStore.load().interruptVodWhenLive) {
             OrganizationReference.parse(settingsStore.load().organizationInput)?.let {
                 livePollingCoordinator.start(it, LIVE_CHECK_INTERVAL_SECONDS)
@@ -161,6 +189,7 @@ class HudlWebViewPlayerActivity : Activity() {
     override fun onStop() {
         livePollingCoordinator.stop()
         cancelCountdown(suppressEvent = false)
+        DeviceStatusRegistry.playerClosed(playbackSessionId)
         super.onStop()
     }
 
@@ -176,8 +205,22 @@ class HudlWebViewPlayerActivity : Activity() {
         super.onPause()
     }
 
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (event.keyCode == KeyEvent.KEYCODE_BACK) {
+            if (event.action == KeyEvent.ACTION_UP) {
+                if (currentIsLive) {
+                    settingsStore.pauseLiveAutoPlay()
+                }
+                finish()
+            }
+            return true
+        }
+        return super.dispatchKeyEvent(event)
+    }
+
     override fun onDestroy() {
         livePollingCoordinator.close()
+        stopAutoplayAttempts()
         mainHandler.removeCallbacksAndMessages(null)
         webView.stopLoading()
         webView.destroy()
@@ -236,14 +279,33 @@ class HudlWebViewPlayerActivity : Activity() {
         currentEventId = event.id
         currentEventTitle = event.title
         currentIsLive = true
+        DeviceStatusRegistry.playerOpened(
+            playbackSessionId,
+            currentEventId,
+            currentEventTitle,
+            currentIsLive
+        )
         livePollingCoordinator.stop()
         event.playbackPageUrl?.let { webView.loadUrl(withAutoplay(it)) }
     }
 
     private fun showError(description: CharSequence?) {
+        stopAutoplayAttempts()
+        DeviceStatusRegistry.playerFailed(playbackSessionId, description?.toString())
         statusView.visibility = View.VISIBLE
         statusView.text = description?.takeIf { it.isNotBlank() }?.let { "Hudl playback unavailable: $it" }
             ?: "Hudl playback unavailable."
+    }
+
+    private fun startAutoplayAttempts() {
+        stopAutoplayAttempts()
+        autoplayAttemptsRemaining = AUTOPLAY_MAX_ATTEMPTS
+        mainHandler.post(autoplayAttempt)
+    }
+
+    private fun stopAutoplayAttempts() {
+        autoplayAttemptsRemaining = 0
+        mainHandler.removeCallbacks(autoplayAttempt)
     }
 
     private fun withAutoplay(value: String): String {
@@ -270,5 +332,27 @@ class HudlWebViewPlayerActivity : Activity() {
         const val EXTRA_IS_LIVE = "hudl_event_is_live"
         private const val SWITCH_COUNTDOWN_SECONDS = 10
         private const val LIVE_CHECK_INTERVAL_SECONDS = 10L
+        private const val AUTOPLAY_MAX_ATTEMPTS = 60
+        private const val AUTOPLAY_RETRY_INTERVAL_MS = 500L
+
+        // Hudl's current embed ignores its autoplay query parameter. Wait for its React player to
+        // render, then activate the same public play control a viewer would press. Keeping this
+        // selector Hudl-specific prevents unrelated page elements or ad controls from being clicked.
+        private const val AUTOPLAY_SCRIPT = """
+            (function() {
+              var activeVideo = Array.prototype.some.call(
+                document.querySelectorAll('video'),
+                function(video) { return !video.paused && !video.ended; }
+              );
+              if (activeVideo) return 'started';
+
+              var playButton = document.querySelector(
+                '[data-testid="FanVideoPlayer_BigPlayButton"]'
+              );
+              if (!playButton) return 'waiting';
+              playButton.click();
+              return 'started';
+            })();
+        """
     }
 }

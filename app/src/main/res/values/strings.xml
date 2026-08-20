@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="kiosk_accessibility_description">Best-effort kiosk enforcement. When enabled by an administrator, Hudl Kiosk returns to the foreground if another app opens and filters common escape keys. It does not read screen content or typed text.</string>
+</resources>

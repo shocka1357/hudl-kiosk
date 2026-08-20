@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="56dp"
+        android:paddingTop="42dp"
+        android:paddingEnd="56dp"
+        android:paddingBottom="56dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WELCOME TO HUDL KIOSK"
+            android:textColor="#97D84D"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:text="Let’s set up this display."
+            android:textColor="#FFFFFF"
+            android:textSize="40sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="Everything stays on this device—no kiosk account, cloud service, or subscription required."
+            android:textColor="#AAB6C1"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_setup_card"
+                android:orientation="vertical"
+                android:padding="26dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1  YOUR HUDL FAN PAGE"
+                    android:textColor="#97D84D"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="On a phone or computer, open fan.hudl.com and find your school. Open its page and copy the full address. The address normally contains /organization/ followed by a number. Paste the address below—or enter only that number."
+                    android:textColor="#C8D1D8"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/setup_organization"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:hint="Full Hudl Fan URL or organization ID"
+                    android:inputType="textUri"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#7F8D98" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Tip: use the public school page—not a private Hudl login page."
+                    android:textColor="#93A2AE"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_setup_card"
+                android:orientation="vertical"
+                android:padding="26dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2  PROTECT ADMIN SETTINGS"
+                    android:textColor="#97D84D"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Create a 4–12 digit PIN. You’ll need it whenever you change the organization or kiosk behavior. The PIN is stored as a protected hash and is never shown remotely."
+                    android:textColor="#C8D1D8"
+                    android:textSize="16sp" />
+
+                <EditText
+                    android:id="@+id/setup_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:hint="Create admin PIN"
+                    android:inputType="numberPassword"
+                    android:maxLength="12"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#7F8D98" />
+
+                <EditText
+                    android:id="@+id/setup_confirm_pin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="Confirm admin PIN"
+                    android:inputType="numberPassword"
+                    android:maxLength="12"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#7F8D98" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_setup_card"
+            android:orientation="vertical"
+            android:padding="26dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3  CHOOSE HOW THIS DISPLAY BEHAVES"
+                android:textColor="#97D84D"
+                android:textSize="15sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="These defaults work well for an unattended TV. You can change them later from PIN-protected administration."
+                android:textColor="#AAB6C1"
+                android:textSize="15sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/setup_auto_play"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Automatically open live broadcasts"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/setup_interrupt_vod"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="While watching on-demand video, count down and switch when a game goes live"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/setup_return_home"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Return to the broadcast menu when playback finishes"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/setup_keep_awake"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Keep the display awake while Hudl Kiosk is running"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <androidx.appcompat.widget.SwitchCompat
+                android:id="@+id/setup_extreme_kiosk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Prepare extreme kiosk lockdown (Accessibility must be enabled separately)"
+                android:textColor="#FFFFFF"
+                android:textSize="17sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Schedule refresh time"
+                    android:textColor="#C8D1D8"
+                    android:textSize="17sp" />
+
+                <EditText
+                    android:id="@+id/setup_interval"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:hint="20"
+                    android:inputType="number"
+                    android:maxLength="3"
+                    android:singleLine="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#7F8D98" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" seconds"
+                    android:textColor="#93A2AE"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/setup_finish"
+            android:layout_width="match_parent"
+            android:layout_height="76dp"
+            android:layout_marginTop="26dp"
+            android:background="@drawable/bg_setup_button"
+            android:text="START HUDL KIOSK"
+            android:textColor="#071108"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="The kiosk launches automatically after setup and whenever the device starts."
+            android:textColor="#8795A1"
+            android:textSize="14sp" />
+    </LinearLayout>
+</ScrollView>

@@ -17,9 +17,11 @@ import tv.hudl.fanplayer.data.HudlPublicGraphQlService
 import tv.hudl.fanplayer.domain.HudlEvent
 import tv.hudl.fanplayer.domain.HudlEventStatus
 import tv.hudl.fanplayer.domain.OrganizationReference
+import tv.hudl.fanplayer.management.DeviceStatusRegistry
 import tv.hudl.fanplayer.player.HudlWebViewPlayerActivity
 import tv.hudl.fanplayer.settings.AdminSettingsActivity
 import tv.hudl.fanplayer.settings.AppSettings
+import tv.hudl.fanplayer.settings.FirstRunSetupActivity
 import tv.hudl.fanplayer.settings.SettingsStore
 import java.net.HttpURLConnection
 import java.net.URL
@@ -57,6 +59,11 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (settingsStore.isFirstRunSetupRequired()) {
+            startActivity(Intent(this, FirstRunSetupActivity::class.java))
+            finish()
+            return
+        }
         setContentView(R.layout.activity_main)
         bootOpenPending = intent.getBooleanExtra(EXTRA_OPEN_NEXT_STREAM, false)
 
@@ -136,6 +143,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderPollingResult(result: Result<List<HudlEvent>>) {
         result.onSuccess { items ->
+            DeviceStatusRegistry.recordPollSuccess()
             latestEvents = items
             eventCache.save(items)
             renderDashboard(items)
@@ -147,6 +155,7 @@ class MainActivity : AppCompatActivity() {
                 maybeAutoPlayLiveEvent(items)
             }
         }.onFailure { error ->
+            DeviceStatusRegistry.recordPollFailure(error.message)
             status.text = if (latestEvents.isEmpty()) {
                 error.message ?: "Hudl is unavailable • retrying automatically"
             } else {
@@ -157,7 +166,10 @@ class MainActivity : AppCompatActivity() {
 
     private fun renderDashboard(items: List<HudlEvent>) {
         latestEvents = items
-        items.firstNotNullOfOrNull { it.organizationName }?.let { organizationName.text = it }
+        items.firstNotNullOfOrNull { it.organizationName }?.let {
+            organizationName.text = it
+            settingsStore.saveOrganizationName(it)
+        }
         renderLive(items)
         renderNext(items)
         renderVodLibrary(items)
@@ -172,7 +184,7 @@ class MainActivity : AppCompatActivity() {
         } else {
             liveNow.text = "${live.title}\n${displayTime(live.startTimeUtc)} • LIVE NOW"
             liveCard.isFocusable = live.playbackPageUrl != null
-            liveCard.setOnClickListener { openEvent(live) }
+            liveCard.setOnClickListener { openEvent(live, userInitiated = true) }
         }
     }
 
@@ -272,12 +284,20 @@ class MainActivity : AppCompatActivity() {
         if (target != null) {
             bootOpenPending = false
             lastAutoPlayedEventId = target.id
+            settingsStore.resumeLiveAutoPlay()
             openEvent(target)
         }
     }
 
     private fun maybeAutoPlayLiveEvent(items: List<HudlEvent>) {
         if (!settingsStore.load().autoPlayLiveEvents) return
+        if (settingsStore.isLiveAutoPlayPaused()) {
+            if (items.none { it.status == HudlEventStatus.LIVE }) {
+                settingsStore.resumeLiveAutoPlay()
+            } else {
+                return
+            }
+        }
         val live = items.firstOrNull {
             it.status == HudlEventStatus.LIVE &&
                 it.playbackPageUrl != null &&
@@ -287,7 +307,10 @@ class MainActivity : AppCompatActivity() {
         openEvent(live)
     }
 
-    private fun openEvent(event: HudlEvent) {
+    private fun openEvent(event: HudlEvent, userInitiated: Boolean = false) {
+        if (userInitiated && event.status == HudlEventStatus.LIVE) {
+            settingsStore.resumeLiveAutoPlay()
+        }
         event.playbackPageUrl?.let { url ->
             startActivity(Intent(this, HudlWebViewPlayerActivity::class.java)
                 .putExtra(HudlWebViewPlayerActivity.EXTRA_URL, url)
