@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#101214"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:id="@+id/admin_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="48dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Hudl Kiosk Administration"
+            android:textColor="#FFFFFF"
+            android:textSize="30sp"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/admin_organization"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:hint="Hudl organization URL or ID"
+            android:inputType="textUri"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E969D" />
+
+        <EditText
+            android:id="@+id/admin_interval"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Refresh interval (10–300 seconds)"
+            android:inputType="number"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E969D" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/admin_auto_play"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:text="Automatically play live events"
+            android:textColor="#FFFFFF" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/admin_keep_awake"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Keep the screen awake"
+            android:textColor="#FFFFFF" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="ADMIN PIN"
+            android:textColor="#8CC63F"
+            android:textStyle="bold" />
+
+        <EditText
+            android:id="@+id/admin_new_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="New PIN (leave blank to keep current)"
+            android:inputType="numberPassword"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E969D" />
+
+        <EditText
+            android:id="@+id/admin_confirm_pin"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Confirm new PIN"
+            android:inputType="numberPassword"
+            android:textColor="#FFFFFF"
+            android:textColorHint="#8E969D" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/admin_save"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Save settings" />
+
+            <Button
+                android:id="@+id/admin_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Cancel" />
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

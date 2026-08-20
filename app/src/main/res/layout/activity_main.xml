@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_app_gradient"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="64dp"
+        android:paddingTop="46dp"
+        android:paddingEnd="64dp"
+        android:paddingBottom="64dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_header_focus"
+                    android:padding="8dp"
+                    android:text="HUDL KIOSK"
+                    android:textColor="#97D84D"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/organization_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="Loading organization…"
+                    android:textColor="#FFFFFF"
+                    android:textSize="34sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/organization_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:textColor="#95A2AF"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_status_pill"
+                android:paddingStart="18dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="18dp"
+                android:paddingBottom="10dp"
+                android:text="Checking live schedule…"
+                android:textColor="#C7D1DA"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:text="LIVE NOW"
+            android:textColor="#FF6969"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/live_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_live_card"
+            android:gravity="center_vertical"
+            android:minHeight="112dp"
+            android:orientation="horizontal"
+            android:padding="24dp">
+
+            <TextView
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:background="@drawable/bg_live_dot"
+                android:gravity="center"
+                android:text="●"
+                android:textColor="#FF6262"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/live_now"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="22dp"
+                android:layout_weight="1"
+                android:lineSpacingExtra="5dp"
+                android:text="Nothing live right now"
+                android:textColor="#FFFFFF"
+                android:textSize="21sp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="38dp"
+            android:text="UP NEXT"
+            android:textColor="#97D84D"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/next_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/bg_focusable_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp">
+
+            <ImageView
+                android:id="@+id/next_thumbnail"
+                android:layout_width="360dp"
+                android:layout_height="203dp"
+                android:background="#18212A"
+                android:contentDescription="Next stream thumbnail"
+                android:scaleType="centerCrop" />
+
+            <TextView
+                android:id="@+id/next_stream"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="30dp"
+                android:layout_weight="1"
+                android:lineSpacingExtra="8dp"
+                android:text="Schedule not announced"
+                android:textColor="#FFFFFF"
+                android:textSize="23sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="42dp"
+            android:gravity="bottom"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="WATCH ON DEMAND"
+                android:textColor="#FFFFFF"
+                android:textSize="24sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Select a broadcast with your remote"
+                android:textColor="#95A2AF"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/previous_streams"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="18dp"
+            android:orientation="vertical" />
+    </LinearLayout>
+</ScrollView>
